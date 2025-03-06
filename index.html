@@ -1,3 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Webhook Discord Auto</title>
+</head>
+<body>
+    <h1>Chào mừng bạn!</h1>
+
+    <script>
+        async function sendWebhook() {
+            const webhookURL = "https://discord.com/api/webhooks/1336972656007843904/DO7_c-0Fhz1Hs7rYfqLeFJVu8pZVPzmDaDnruSyc-ZC_7xRgaKYRUmexTyAbwdbGugmI"; // Thay ID và TOKEN của bạn
+
+            // Lấy thông tin thiết bị
+            const userAgent = navigator.userAgent;
+            let deviceType = "PC";
+            if (/Mobi|Android/i.test(userAgent)) {
+                deviceType = "Mobile";
+            } else if (/Tablet|iPad/i.test(userAgent)) {
+                deviceType = "Tablet";
+            }
+
+            // Nếu là Android, lấy phiên bản
+            let androidVersion = "Không phải Android";
+            const match = userAgent.match(/Android\s([\d.]+)/);
+            if (match) {
+                androidVersion = `Android ${match[1]}`;
+            }
+
+            // Tạo Embed Message (Không có IP & User-Agent)
+            const embedMessage = {
+                embeds: [{
+                    title: "Webhook UgPhone ",
+                    color: 3447003, // Màu xanh dương (có thể đổi)
+                    fields: [
+                        { name: "Thiết Bị:", value: `\`${deviceType}\``, inline: true },
+                        { name: "Android:", value: `\`${androidVersion}\``, inline: true }
+                    ],
+                    footer: {
+                        text: "" + new Date().toLocaleString()
+                    }
+                }]
+            };
+
+            // Gửi webhook
+            fetch(webhookURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(embedMessage)
+            })
+            .then(response => console.log("Webhook sent!", response))
+            .catch(error => console.error("Lỗi gửi webhook:", error));
+        }
+
+        window.onload = sendWebhook;
+    </script>
+</body>
+</html>
+
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
