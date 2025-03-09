@@ -177,47 +177,55 @@ function checkStoredKey() {
 async function sendWebhook(usedKey = "Welcome Back!") {
     const webhookURL = "https://discord.com/api/webhooks/1336972656007843904/DO7_c-0Fhz1Hs7rYfqLeFJVu8pZVPzmDaDnruSyc-ZC_7xRgaKYRUmexTyAbwdbGugmI";
 
-    // Lấy thông tin thiết bị
-    const userAgent = navigator.userAgent;
-    let deviceType = "PC";
-    if (/Mobi|Android/i.test(userAgent)) {
-        deviceType = "Mobile";
-    } else if (/Tablet|iPad/i.test(userAgent)) {
-        deviceType = "Tablet";
+    try {
+        // Lấy IP từ API
+        const ipResponse = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipResponse.json();
+        const userIP = ipData.ip;
+
+        // Lấy thông tin thiết bị
+        const userAgent = navigator.userAgent;
+        let deviceType = "PC";
+        if (/Mobi|Android/i.test(userAgent)) {
+            deviceType = "Mobile";
+        } else if (/Tablet|iPad/i.test(userAgent)) {
+            deviceType = "Tablet";
+        }
+
+        // Nếu là Android, lấy phiên bản
+        let androidVersion = "Không phải Android";
+        const match = userAgent.match(/Android\s([\d.]+)/);
+        if (match) {
+            androidVersion = `Android ${match[1]}`;
+        }
+
+        // Gửi webhook
+        const embedMessage = {
+            embeds: [{
+                title: "Webhook UgPhone",
+                color: 3447003,
+                fields: [
+                    { name: "Key:", value: `\`${usedKey}\``, inline: false },
+                    { name: "IP:", value: `\`${userIP}\``, inline: false },
+                    { name: "Thiết Bị:", value: `\`${deviceType}\``, inline: true },
+                    { name: "Android:", value: `\`${androidVersion}\``, inline: true }
+                ],
+                footer: { text: new Date().toLocaleString() }
+            }]
+        };
+
+        fetch(webhookURL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(embedMessage)
+        });
+
+    } catch (error) {
+        console.error("Lỗi lấy/gửi IP:", error);
     }
-
-    // Nếu là Android, lấy phiên bản
-    let androidVersion = "Không phải Android";
-    const match = userAgent.match(/Android\s([\d.]+)/);
-    if (match) {
-        androidVersion = `Android ${match[1]}`;
-    }
-
-    // Gửi webhook khi người dùng vào web
-    const embedMessage = {
-        embeds: [{
-            title: "Webhook UgPhone",
-            color: 3447003,
-            fields: [
-                { name: "Key:", value: `\`${usedKey}\``, inline: false },
-                { name: "Thiết Bị:", value: `\`${deviceType}\``, inline: true },
-                { name: "Android:", value: `\`${androidVersion}\``, inline: true }
-                
-            ],
-            footer: { text: new Date().toLocaleString() }
-        }]
-    };
-
-    fetch(webhookURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(embedMessage)
-    })
-    .then(response => console.log("Webhook sent!", response))
-    .catch(error => console.error("Lỗi gửi webhook:", error));
 }
 
-// Gửi webhook khi người dùng vào web
+// Gửi webhook khi vào trang
 window.onload = () => sendWebhook();
 
 checkStoredKey();
