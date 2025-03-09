@@ -120,14 +120,14 @@ function openNewTab() {
 }
 
 const validKeys = ["KEY_GFbOh004", "KEY_GFbOh004", "Meowx"]; 
-const keyExpireTime = 25 * 60 * 60 * 1000; 
+const keyExpireTime = 00 * 60 * 60 * 1000; 
 const redirectURL = "https://meolazy.github.io/Tab/";
 const keyLink = "https://ez4short.com/GetKey"; 
 
 function copyKeyLink() {
     navigator.clipboard.writeText(keyLink).then(() => {
       document.getElementById("message").style.color = "green";
-      document.getElementById("message").textContent = "> https://ez4short.com/GetKey < Bạn Copy Link Lấy Key, Bạn Vào Google Và Dán Để Lấy Key Nha";
+      document.getElementById("message").textContent = "> https://ez4short.com/GetKey < Bạn Copy Link Lấy Key, Bạn Vào Google Và Dán Để Lấy Key Nha! , >> https://link4m.com/sdAQIe << Link 2 Nhanh Hơn Nha";
     }).catch(err => {
       document.getElementById("message").style.color = "red";
       document.getElementById("message").textContent = "https://ez4short.com/GetKey";
